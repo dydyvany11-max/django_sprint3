@@ -60,7 +60,10 @@ class Post(PublishedModel):
         related_name='posts', verbose_name='Местоположение',
     )
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True,
+        # Категория обязательна при создании поста (blank=False).
+        # null=True нужен для SET_NULL при удалении связанной категории.
+        # Это разные требования: SET_NULL не требует blank=True.
+        Category, on_delete=models.SET_NULL, null=True, blank=False,
         related_name='posts', verbose_name='Категория',
     )
 
