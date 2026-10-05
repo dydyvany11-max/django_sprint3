@@ -41,6 +41,27 @@ py -3.10 -m venv venv
 Категория обязательна в форме создания поста, но после её удаления
 связь становится NULL, как требует задание.
 
+### Обязательная категория и удаление связанного объекта
+
+Для `Post.category` в задании заданы два независимых требования:
+категорию обязательно выбирать при создании публикации, а при удалении
+категории сохранять публикацию и устанавливать её внешний ключ в NULL.
+Поэтому поле имеет `on_delete=models.SET_NULL`, `null=True`, `blank=False`.
+Все внешние ключи имеют явный `on_delete`.
+
+Это соответствует официальному тесту `tests/test_post_model.py`,
+который проверяет `('category', ForeignKey, {'null': True, 'blank': False})`.
+Дополнительные тесты в `tests/test_category_validation.py` проверяют,
+что форма отклоняет пустую категорию, а удаление категории сохраняет пост.
+
+В документации Django `SET_NULL` требует `null=True`; параметр `blank`
+управляет допустимостью пустого значения при валидации формы.
+Установка `blank=True` здесь сделала бы категорию необязательной,
+нарушив условие задания и официальный тест.
+
+- [SET_NULL](https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.SET_NULL)
+- [blank](https://docs.djangoproject.com/en/3.2/ref/models/fields/#blank)
+
 ## Сдача
 
 Репозиторий: https://gitlab.praktikum-devops.ru/dydyvany11/django_sprint3.

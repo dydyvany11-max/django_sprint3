@@ -59,12 +59,16 @@ class Post(PublishedModel):
         Location, on_delete=models.SET_NULL, null=True, blank=True,
         related_name='posts', verbose_name='Местоположение',
     )
+    # По ТЗ новую публикацию нельзя добавить без категории.
+    # tests/test_post_model.py проверяет null=True и blank=False.
+    # SET_NULL требует null=True для БД, а не blank=True для формы.
     category = models.ForeignKey(
-        # Категория обязательна при создании поста (blank=False).
-        # null=True нужен для SET_NULL при удалении связанной категории.
-        # Это разные требования: SET_NULL не требует blank=True.
-        Category, on_delete=models.SET_NULL, null=True, blank=False,
-        related_name='posts', verbose_name='Категория',
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=False,
+        related_name='posts',
+        verbose_name='Категория',
     )
 
     class Meta:
